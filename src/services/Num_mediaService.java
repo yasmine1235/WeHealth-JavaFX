@@ -1,0 +1,90 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package services;
+
+import entities.Num_media;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import utils.MyDB;
+
+/**
+ *
+ * @author yasmi
+ */
+public class Num_mediaService implements IService<Num_media> {
+     Connection cnx;
+
+    public Num_mediaService() {
+        cnx = MyDB.getInstance().getCnx();
+    }
+
+    @Override
+    public void ajouter(Num_media t) throws SQLException {
+        String req = "insert into categorie(nom,nom_fichier) values('" + t.getNom() + "','" + t.getNom_fichier() + "')";
+        Statement st = cnx.createStatement();
+        st.executeUpdate(req);
+    }
+
+
+    @Override
+    public void modifier(Num_media t) throws SQLException {
+        String req = "update Num_media set nom = ? nomFichier = ? where id = ?";
+        PreparedStatement ps = cnx.prepareStatement(req);
+        ps.setString(1, t.getNom());
+        ps.setString(2, t.getNom_fichier());
+        ps.setInt(3, t.getId());
+        ps.executeUpdate();
+    }
+
+    @Override
+    public void supprimer(Num_media t) throws SQLException {
+       String req = "delete from Num_media where id = "+t.getId();
+         //String req1 = "delete from categorie where id = ?";
+         Statement st = cnx.createStatement();
+         /*PreparedStatement ps = cnx.prepareStatement(req1);
+         ps.setInt(1,t.getId());*/
+         st.executeUpdate(req);
+    }
+
+    @Override
+    public List<Num_media> recuperer() throws SQLException {
+        List<Num_media> medias = new ArrayList<>();
+        String req = "select * from num_media";
+        Statement st = cnx.createStatement();
+        ResultSet rs = st.executeQuery(req);
+        while(rs.next()){
+            Num_media p = new Num_media();
+            p.setId(rs.getInt("id"));
+            p.setNom(rs.getString("nom"));
+            p.setNom(rs.getString("nomFichier"));
+          
+           medias.add(p);
+        }
+        return medias;
+    }
+     public List<Num_media> recupererById(Num_media t) throws SQLException {
+        List<Num_media> medias = new ArrayList<>();
+        String req = " select * from num_media where id = +t.getId()";
+        Statement st = cnx.createStatement();
+        ResultSet rs = st.executeQuery(req);
+        while(rs.next()){
+            Num_media p = new Num_media();
+            p.setId(rs.getInt("id"));
+            p.setNom(rs.getString("nom"));
+            p.setNom(rs.getString("nomFichier"));
+          
+           medias.add(p);
+        }
+        return medias;
+    }
+    
+    
+}
