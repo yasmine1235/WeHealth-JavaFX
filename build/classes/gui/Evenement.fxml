@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="533.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EvenementController">
+   <children>
+      <TabPane prefHeight="540.0" prefWidth="932.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Evenement">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tblevent" onMouseClicked="#selectevent" prefHeight="240.0" prefWidth="932.0">
+                          <columns>
+                            <TableColumn fx:id="coltitre" prefWidth="129.0" text="Titre" />
+                            <TableColumn fx:id="coldesc" prefWidth="109.0" text="Description" />
+                              <TableColumn fx:id="coldatedebut" prefWidth="162.0" text="Date début" />
+                              <TableColumn fx:id="coldatefin" minWidth="0.0" prefWidth="149.0" text="Date fin" />
+                              <TableColumn fx:id="colmax" prefWidth="97.0" text="Max participant " />
+                              <TableColumn fx:id="colprix" prefWidth="64.0" text="Prix" />
+                              <TableColumn fx:id="collien" prefWidth="237.0" text="Lien consultation" />
+                          </columns>
+                        </TableView>
+                        <TextField fx:id="tftitre" layoutX="339.0" layoutY="254.0" />
+                        <Label layoutX="220.0" layoutY="359.0" prefHeight="22.0" prefWidth="98.0" text="Date début" />
+                        <Label layoutX="269.0" layoutY="258.0" prefHeight="22.0" prefWidth="41.0" text="Titre" />
+                        <Label layoutX="233.0" layoutY="294.0" prefHeight="22.0" prefWidth="100.0" text="Description" />
+                        <Label layoutX="202.0" layoutY="329.0" prefHeight="22.0" prefWidth="114.0" text="Lien de consultation" />
+                        <Label layoutX="504.0" layoutY="330.0" prefHeight="22.0" prefWidth="41.0" text="Image" />
+                        <Button fx:id="btnimport" layoutX="603.0" layoutY="329.0" mnemonicParsing="false" onAction="#AjouterPhoto" prefHeight="25.0" prefWidth="148.0" text="Importer" />
+                        <Button fx:id="btnajout" layoutX="26.0" layoutY="266.0" mnemonicParsing="false" onAction="#AjouterArticle" prefHeight="39.0" prefWidth="122.0" text="Ajouter" />
+                        <Button fx:id="btnvider" layoutX="26.0" layoutY="427.0" mnemonicParsing="false" onAction="#ViderChampsevent" prefHeight="39.0" prefWidth="122.0" text="Vider les champs" />
+                        <Button fx:id="btnsupp" layoutX="26.0" layoutY="370.0" mnemonicParsing="false" onAction="#SupprimerEvent" prefHeight="39.0" prefWidth="122.0" text="Supprimer" />
+                        <Button fx:id="btnmodif" layoutX="26.0" layoutY="318.0" mnemonicParsing="false" onAction="#ModifierEvent" prefHeight="39.0" prefWidth="122.0" text="Modifier" />
+                        <TextField fx:id="tfmax" layoutX="602.0" layoutY="293.0" />
+                        <TextField fx:id="tfliencons" layoutX="339.0" layoutY="339.0" />
+                        <TextField fx:id="tfdesc" layoutX="339.0" layoutY="293.0" />
+                        <TextField fx:id="tfprix" layoutX="602.0" layoutY="402.0" />
+                        <Label layoutX="220.0" layoutY="404.0" prefHeight="22.0" prefWidth="98.0" text="Date fin" />
+                        <Label layoutX="495.0" layoutY="295.0" prefHeight="22.0" prefWidth="98.0" text="Max participant" />
+                        <Label layoutX="524.0" layoutY="404.0" prefHeight="22.0" prefWidth="41.0" text="Prix" />
+                        <DatePicker fx:id="datedebut" layoutX="339.0" layoutY="383.0" prefHeight="25.0" prefWidth="150.0" />
+                        <DatePicker fx:id="datefin" layoutX="339.0" layoutY="416.0" prefHeight="25.0" prefWidth="151.0" />
+                        <Label fx:id="labelphoto" layoutX="603.0" layoutY="373.0" prefHeight="17.0" prefWidth="149.0" />
+                        <Label fx:id="ctrltitre" layoutX="339.0" layoutY="277.0" prefHeight="17.0" prefWidth="148.0" />
+                        <Label fx:id="ctrldesc" layoutX="339.0" layoutY="320.0" prefHeight="17.0" prefWidth="148.0" />
+                        <Label fx:id="ctrllien" layoutX="339.0" layoutY="365.0" prefHeight="17.0" prefWidth="150.0" />
+                        <Label fx:id="lblidevent" layoutX="663.0" layoutY="258.0" visible="false" />
+                        <Label fx:id="lblimgevent" layoutX="835.0" layoutY="333.0" visible="false" />
+                        <Label fx:id="lblDateevent" layoutX="231.0" layoutY="433.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
