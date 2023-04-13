@@ -9,6 +9,7 @@ import entities.Article;
 import entities.Categorie;
 import entities.Num_media;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -21,7 +22,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -94,7 +97,22 @@ public class AdminPageController implements Initializable {
     private Label lblid;
     @FXML
     private Label lblimg;
-    
+    @FXML
+    private Label ctrltitre;
+    @FXML
+    private Label ctrlavant;
+    @FXML
+    private Label ctrlnom;
+    @FXML
+    private Button btnretour;
+
+    private void reset() {
+        ctrltitre.setText("");
+        ctrlavant.setText("");
+        ctrlnom.setText("");
+
+    }
+
     private final ArticleService articleService = new ArticleService();
     private final CategorieService categorieService = new CategorieService();
     private final Num_mediaService num_mediaService = new Num_mediaService();
@@ -102,7 +120,6 @@ public class AdminPageController implements Initializable {
     private List<Categorie> categories = new ArrayList<Categorie>();
     @FXML
     private Label lblidcat;
-   
 
     /**
      * Initializes the controller class.
@@ -152,6 +169,15 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void AjouterArticle(ActionEvent event) {
+        if (tftitre.getText().isEmpty()) {
+            ctrltitre.setText("champ vide");
+        }
+        else{ctrltitre.setText("");}
+        if (tfavant.getText().isEmpty()) {
+            ctrlavant.setText("champ vide");
+        }
+        else{ctrlavant.setText("");}
+        
 
         try {
             String titre = tftitre.getText();
@@ -163,8 +189,8 @@ public class AdminPageController implements Initializable {
             Categorie cat = cbcat.getValue();
             Num_media num = new Num_media(imageUrl, imageUrl);
             num = num_mediaService.ajouter(num);
-            Article article= new Article(titre, contenu, avant, created, created, cat, num);
-            article=articleService.ajouter(article);
+            Article article = new Article(titre, contenu, avant, created, created, cat, num);
+            article = articleService.ajouter(article);
             Refresh();
         } catch (SQLException ex) {
             Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
@@ -173,9 +199,9 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void SupprimerArticle(ActionEvent event) {
-        if(!(lblid.getText().isEmpty() && lblid.getText()=="")){
+        if (!(lblid.getText().isEmpty() && lblid.getText() == "")) {
             try {
-                Article article= new Article(Integer.parseInt(lblid.getText()));
+                Article article = new Article(Integer.parseInt(lblid.getText()));
                 articleService.supprimer(article);
                 vider();
                 Refresh();
@@ -183,32 +209,36 @@ public class AdminPageController implements Initializable {
                 Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            
+
     }
 
     @FXML
     private void ModifierArticle(ActionEvent event) {
-        if(!(lblid.getText().isEmpty() && lblid.getText()=="")){
-        try {
-            String titre = tftitre.getText();
-            String avant = tfavant.getText();
-            String contenu = tfContenu.getText();
-            long millis = System.currentTimeMillis();
-            Date created = new Date(millis);
-            String imageUrl = lblpath.getText();
-            Categorie cat = cbcat.getValue();
-            Num_media num = new Num_media(Integer.parseInt(lblimg.getText()),imageUrl, imageUrl);
-            Article article= new Article(Integer.parseInt(lblid.getText()),titre, contenu, avant, created, created, cat, num);
-            articleService.modifier(article);
-            Refresh();
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if (!(lblid.getText().isEmpty() && lblid.getText() == "")) {
+            try {
+                String titre = tftitre.getText();
+                String avant = tfavant.getText();
+                String contenu = tfContenu.getText();
+                long millis = System.currentTimeMillis();
+                Date created = new Date(millis);
+                String imageUrl = lblpath.getText();
+                Categorie cat = cbcat.getValue();
+                Num_media num = new Num_media(Integer.parseInt(lblimg.getText()), imageUrl, imageUrl);
+                Article article = new Article(Integer.parseInt(lblid.getText()), titre, contenu, avant, created, created, cat, num);
+                articleService.modifier(article);
+                Refresh();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     @FXML
     private void AjouterCategorie(ActionEvent event) {
+        if (tfnom.getText().isEmpty()) {
+            ctrlnom.setText("champ vide");
+        }
+        else{ctrlnom.setText("");}
         String nom = tfnom.getText();
         if (!nom.isEmpty()) {
             try {
@@ -229,9 +259,9 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void SupprimerCategorie(ActionEvent event) {
-        if(!(lblidcat.getText().isEmpty() && lblidcat.getText()=="")){
+        if (!(lblidcat.getText().isEmpty() && lblidcat.getText() == "")) {
             try {
-                Categorie categorie= new Categorie(Integer.parseInt(lblidcat.getText()));
+                Categorie categorie = new Categorie(Integer.parseInt(lblidcat.getText()));
                 categorieService.supprimer(categorie);
                 viderCat();
                 Refresh();
@@ -243,10 +273,10 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void ModifierCategorie(ActionEvent event) {
-        if(!(lblidcat.getText().isEmpty() && lblidcat.getText()=="")){
+        if (!(lblidcat.getText().isEmpty() && lblidcat.getText() == "")) {
             try {
                 String nom = tfnom.getText();
-                categorieService.modifier(new Categorie(Integer.parseInt(lblidcat.getText()),nom));
+                categorieService.modifier(new Categorie(Integer.parseInt(lblidcat.getText()), nom));
                 Refresh();
             } catch (SQLException ex) {
                 Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,13 +295,14 @@ public class AdminPageController implements Initializable {
         tfContenu.setText(article.getContenu());
         tfavant.setText(article.getFeatured_text());
         tftitre.setText(article.getTitre());
-        lblid.setText(""+ article.getId());
+        lblid.setText("" + article.getId());
         cbcat.setValue(article.getCategorie());
         lblpath.setText(article.getNum_media().toString());
         lblimg.setText(String.valueOf(article.getNum_media().getId()));
         Refresh();
     }
-    private void vider(){
+
+    private void vider() {
         tfContenu.setText("");
         tfavant.setText("");
         tftitre.setText("");
@@ -280,16 +311,28 @@ public class AdminPageController implements Initializable {
         lblpath.setText("");
         lblimg.setText("");
     }
-     private void viderCat(){
+
+    private void viderCat() {
         tfnom.setText("");
         lblidcat.setText("");
     }
 
     @FXML
     private void selectCategorie(MouseEvent event) {
-        Categorie categorie=tblcategorie.getSelectionModel().getSelectedItem();
+        Categorie categorie = tblcategorie.getSelectionModel().getSelectedItem();
         tfnom.setText(categorie.getNom());
         lblidcat.setText(String.valueOf(categorie.getId()));
+    }
+
+    @FXML
+    private void GoHomePage(ActionEvent event) {
+         try {
+            //navigation
+            Parent loader = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
+            btnretour.getScene().setRoot(loader);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
 }

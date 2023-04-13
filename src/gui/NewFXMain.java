@@ -21,7 +21,7 @@ public class NewFXMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
         Scene scene = new Scene(root,1000,800); 
-        primaryStage.setTitle("Gérer pieces musee");
+        primaryStage.setTitle("WeHealth");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
