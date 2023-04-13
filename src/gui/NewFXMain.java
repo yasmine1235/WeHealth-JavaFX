@@ -20,7 +20,8 @@ public class NewFXMain extends Application {
    @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
-        Scene scene = new Scene(root,1000,800); 
+        Scene scene = new Scene(root,932,533); 
+        primaryStage.setResizable(false);
         primaryStage.setTitle("WeHealth");
         primaryStage.setScene(scene);
         primaryStage.show();
