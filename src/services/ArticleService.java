@@ -32,7 +32,7 @@ public class ArticleService implements IService<Article> {
 
     @Override
     public Article ajouter(Article t) throws SQLException {
-        String req = "insert into Article (Titre,featured_text,Contenu,created_at,updated_at,categorie_id,featured_image_id) values('" + t.getTitre() + "','" + t.getContenu() + "','" + t.getFeatured_text() + "','" + t.getCreated_at() + "','" + t.getUpdated_at() + "','" + t.getCategorie().getId() + "','" + t.getNum_media().getId() + "')";
+        String req = "insert into Article (Titre,featured_text,Contenu,created_at,updated_at,categorie_id,featured_image_id) values('" + t.getTitre() + "','" + t.getFeatured_text() + "','" + t.getContenu() + "','" + t.getCreated_at() + "','" + t.getUpdated_at() + "','" + t.getCategorie().getId() + "','" + t.getNum_media().getId() + "')";
         Statement st = cnx.createStatement();
         int affectedRows = st.executeUpdate(req, st.RETURN_GENERATED_KEYS);
         if (affectedRows == 0) {
@@ -51,8 +51,10 @@ public class ArticleService implements IService<Article> {
 
     @Override
     public void modifier(Article t) throws SQLException {
-        String req = "update  set Titre = ? featured_text = ? Contenu = ?  created_at = ? updated_at = ? categorie_id = ? featured_image_id = ? where id = ?";
+        Num_mediaService num_mediaService =new Num_mediaService();
+        String req = "update article set Titre = ? , featured_text = ? , Contenu = ? , created_at = ? , updated_at = ? , categorie_id = ? , featured_image_id = ? where id = ?";
         PreparedStatement ps = cnx.prepareStatement(req);
+        num_mediaService.modifier(t.getNum_media());
         ps.setString(1, t.getTitre());
         ps.setString(2, t.getFeatured_text());
         ps.setString(3, t.getContenu());

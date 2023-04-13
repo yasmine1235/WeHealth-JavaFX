@@ -49,7 +49,7 @@ public class Num_mediaService implements IService<Num_media> {
 
     @Override
     public void modifier(Num_media t) throws SQLException {
-        String req = "update Num_media set nom = ? nom_fichier = ? where id = ?";
+        String req = "update Num_media set nom = ? , nom_fichier = ? where id = ?";
         PreparedStatement ps = cnx.prepareStatement(req);
         ps.setString(1, t.getNom());
         ps.setString(2, t.getNom_fichier());

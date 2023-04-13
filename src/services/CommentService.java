@@ -52,7 +52,7 @@ Connection cnx;
 
     @Override
     public void modifier(Comment t) throws SQLException {
-        String req = "update Comment set article_id = ? user_id = ? contenu = ? createdAt = ? where id = ?";
+        String req = "update Comment set article_id = ? , user_id = ? , contenu = ? , createdAt = ? where id = ?";
         PreparedStatement ps = cnx.prepareStatement(req);
         ps.setInt(1, t.getArticle().getId());
         ps.setInt(2, t.getUser().getId());

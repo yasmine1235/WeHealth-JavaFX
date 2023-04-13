@@ -47,7 +47,7 @@ public class Article {
         this.comments = comments;
     }
 
-    public Article(int id, String Titre, String Contenu, String featured_text, Date created_at, Date updated_at, Categorie categorie, Num_media num_media, List<Comment> comments) {
+    public Article(int id, String Titre, String Contenu, String featured_text, Date created_at, Date updated_at, Categorie categorie, Num_media num_media) {
         this.id = id;
         this.Titre = Titre;
         this.Contenu = Contenu;
@@ -56,12 +56,12 @@ public class Article {
         this.updated_at = updated_at;
         this.categorie = categorie;
         this.num_media = num_media;
-        this.comments = comments;
     }
 
-    public Article(int aInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Article(int id) {
+        this.id = id;
     }
+
 
     public int getId() {
         return id;

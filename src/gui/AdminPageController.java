@@ -90,14 +90,19 @@ public class AdminPageController implements Initializable {
     private TableView<Article> tblarticle;
     @FXML
     private TableView<Categorie> tblcategorie;
-
+    @FXML
+    private Label lblid;
+    @FXML
+    private Label lblimg;
+    
     private final ArticleService articleService = new ArticleService();
     private final CategorieService categorieService = new CategorieService();
     private final Num_mediaService num_mediaService = new Num_mediaService();
     private List<Article> articles = new ArrayList<Article>();
     private List<Categorie> categories = new ArrayList<Categorie>();
     @FXML
-    private Label lblid;
+    private Label lblidcat;
+   
 
     /**
      * Initializes the controller class.
@@ -168,10 +173,38 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void SupprimerArticle(ActionEvent event) {
+        if(!(lblid.getText().isEmpty() && lblid.getText()=="")){
+            try {
+                Article article= new Article(Integer.parseInt(lblid.getText()));
+                articleService.supprimer(article);
+                vider();
+                Refresh();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+            
     }
 
     @FXML
     private void ModifierArticle(ActionEvent event) {
+        if(!(lblid.getText().isEmpty() && lblid.getText()=="")){
+        try {
+            String titre = tftitre.getText();
+            String avant = tfavant.getText();
+            String contenu = tfContenu.getText();
+            long millis = System.currentTimeMillis();
+            Date created = new Date(millis);
+            String imageUrl = lblpath.getText();
+            Categorie cat = cbcat.getValue();
+            Num_media num = new Num_media(Integer.parseInt(lblimg.getText()),imageUrl, imageUrl);
+            Article article= new Article(Integer.parseInt(lblid.getText()),titre, contenu, avant, created, created, cat, num);
+            articleService.modifier(article);
+            Refresh();
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
     }
 
     @FXML
@@ -191,24 +224,39 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void ViderChampscat(ActionEvent event) {
+        viderCat();
     }
 
     @FXML
     private void SupprimerCategorie(ActionEvent event) {
+        if(!(lblidcat.getText().isEmpty() && lblidcat.getText()=="")){
+            try {
+                Categorie categorie= new Categorie(Integer.parseInt(lblidcat.getText()));
+                categorieService.supprimer(categorie);
+                viderCat();
+                Refresh();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @FXML
     private void ModifierCategorie(ActionEvent event) {
+        if(!(lblidcat.getText().isEmpty() && lblidcat.getText()=="")){
+            try {
+                String nom = tfnom.getText();
+                categorieService.modifier(new Categorie(Integer.parseInt(lblidcat.getText()),nom));
+                Refresh();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @FXML
     private void ViderChampsarticle(ActionEvent event) {
-        tfContenu.setText("");
-        tfavant.setText("");
-        tftitre.setText("");
-        lblid.setText("");
-        cbcat.setValue(new Categorie());
-        lblpath.setText("");
+        vider();
     }
 
     @FXML
@@ -220,7 +268,28 @@ public class AdminPageController implements Initializable {
         lblid.setText(""+ article.getId());
         cbcat.setValue(article.getCategorie());
         lblpath.setText(article.getNum_media().toString());
+        lblimg.setText(String.valueOf(article.getNum_media().getId()));
         Refresh();
+    }
+    private void vider(){
+        tfContenu.setText("");
+        tfavant.setText("");
+        tftitre.setText("");
+        lblid.setText("");
+        cbcat.setValue(new Categorie());
+        lblpath.setText("");
+        lblimg.setText("");
+    }
+     private void viderCat(){
+        tfnom.setText("");
+        lblidcat.setText("");
+    }
+
+    @FXML
+    private void selectCategorie(MouseEvent event) {
+        Categorie categorie=tblcategorie.getSelectionModel().getSelectedItem();
+        tfnom.setText(categorie.getNom());
+        lblidcat.setText(String.valueOf(categorie.getId()));
     }
 
 }

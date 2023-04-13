@@ -44,6 +44,7 @@
                         <ComboBox fx:id="cbcat" layoutX="591.0" layoutY="257.0" prefWidth="150.0" />
                         <Label fx:id="lblpath" layoutX="488.0" layoutY="340.0" />
                         <Label fx:id="lblid" layoutX="817.0" layoutY="258.0" visible="false" />
+                        <Label fx:id="lblimg" layoutX="750.0" layoutY="340.0" visible="false" />
                      </children>
                   </AnchorPane>
             </content>
@@ -52,7 +53,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tblcategorie" prefHeight="240.0" prefWidth="932.0">
+                        <TableView fx:id="tblcategorie" onMouseClicked="#selectCategorie" prefHeight="240.0" prefWidth="932.0">
                            <columns>
                               <TableColumn fx:id="colnom" prefWidth="100.0" text="Nom" />
                            </columns>
@@ -63,6 +64,7 @@
                         <Button fx:id="btnvider1" layoutX="26.0" layoutY="427.0" mnemonicParsing="false" onAction="#ViderChampscat" prefHeight="39.0" prefWidth="122.0" text="Vider les champs" />
                         <Button fx:id="btnsupp1" layoutX="26.0" layoutY="370.0" mnemonicParsing="false" onAction="#SupprimerCategorie" prefHeight="39.0" prefWidth="122.0" text="Supprimer" />
                         <Button fx:id="btnmodif1" layoutX="26.0" layoutY="318.0" mnemonicParsing="false" onAction="#ModifierCategorie" prefHeight="39.0" prefWidth="122.0" text="Modifier" />
+                        <Label fx:id="lblidcat" layoutX="638.0" layoutY="297.0" visible="false" />
                      </children>
                   </AnchorPane>
                </content>
