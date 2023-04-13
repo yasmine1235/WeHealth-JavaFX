@@ -24,6 +24,16 @@ public class Article {
     public Article() {
     }
 
+    public Article(String Titre, String Contenu, String featured_text, Date created_at, Date updated_at, Categorie categorie, Num_media num_media) {
+        this.Titre = Titre;
+        this.Contenu = Contenu;
+        this.featured_text = featured_text;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.categorie = categorie;
+        this.num_media = num_media;
+    }
+    
     public Article(int id, String Titre, String Contenu, String featured_text, Date created_at, Date updated_at, Categorie categorie, Num_media num_media, List<User> likes, List<Comment> comments) {
         this.id = id;
         this.Titre = Titre;

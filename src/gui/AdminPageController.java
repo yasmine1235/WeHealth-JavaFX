@@ -30,6 +30,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.ArticleService;
@@ -89,13 +90,14 @@ public class AdminPageController implements Initializable {
     private TableView<Article> tblarticle;
     @FXML
     private TableView<Categorie> tblcategorie;
-    
+
     private final ArticleService articleService = new ArticleService();
     private final CategorieService categorieService = new CategorieService();
     private final Num_mediaService num_mediaService = new Num_mediaService();
     private List<Article> articles = new ArrayList<Article>();
     private List<Categorie> categories = new ArrayList<Categorie>();
-    
+    @FXML
+    private Label lblid;
 
     /**
      * Initializes the controller class.
@@ -119,14 +121,14 @@ public class AdminPageController implements Initializable {
             colcontenu.setCellValueFactory(new PropertyValueFactory<>("Contenu"));
             colcategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
             coldate.setCellValueFactory(new PropertyValueFactory<>("created_at"));
-            
+
             tblarticle.setItems(articlesObs);
 
             ObservableList<Categorie> categoriesObs = FXCollections.observableArrayList(categories);
             colnom.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-            
+
             tblcategorie.setItems(categoriesObs);
-            
+
             cbcat.setItems(categoriesObs);
 
         } catch (SQLException ex) {
@@ -145,15 +147,23 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void AjouterArticle(ActionEvent event) {
-        String titre = tftitre.getText();
-        String avant = tfavant.getText();
-        String contenu = tfContenu.getText();
-        long millis=System.currentTimeMillis();
-        Date created = new Date(millis);
-        String imageUrl=lblpath.getText();
-        Categorie cat = cbcat.getValue();
-        Num_media num = new Num_media(imageUrl,imageUrl);
-        
+
+        try {
+            String titre = tftitre.getText();
+            String avant = tfavant.getText();
+            String contenu = tfContenu.getText();
+            long millis = System.currentTimeMillis();
+            Date created = new Date(millis);
+            String imageUrl = lblpath.getText();
+            Categorie cat = cbcat.getValue();
+            Num_media num = new Num_media(imageUrl, imageUrl);
+            num = num_mediaService.ajouter(num);
+            Article article= new Article(titre, contenu, avant, created, created, cat, num);
+            article=articleService.ajouter(article);
+            Refresh();
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminPageController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -193,6 +203,24 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void ViderChampsarticle(ActionEvent event) {
+        tfContenu.setText("");
+        tfavant.setText("");
+        tftitre.setText("");
+        lblid.setText("");
+        cbcat.setValue(new Categorie());
+        lblpath.setText("");
+    }
+
+    @FXML
+    private void selectArticle(MouseEvent event) {
+        Article article = tblarticle.getSelectionModel().getSelectedItem();
+        tfContenu.setText(article.getContenu());
+        tfavant.setText(article.getFeatured_text());
+        tftitre.setText(article.getTitre());
+        lblid.setText(""+ article.getId());
+        cbcat.setValue(article.getCategorie());
+        lblpath.setText(article.getNum_media().toString());
+        Refresh();
     }
 
 }

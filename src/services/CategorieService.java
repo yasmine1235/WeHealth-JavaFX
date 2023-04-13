@@ -27,10 +27,23 @@ public class CategorieService implements IService<Categorie>{
     }
 
     @Override
-    public void ajouter(Categorie t) throws SQLException {
+    public Categorie ajouter(Categorie t) throws SQLException {
         String req = "insert into categorie(nom) values('" + t.getNom() + "')";
         Statement st = cnx.createStatement();
-        st.executeUpdate(req);
+        int affectedRows=st.executeUpdate(req,st.RETURN_GENERATED_KEYS);
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                t.setId(generatedKeys.getInt(1));
+            }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+        return t;
     }
 
     @Override
@@ -55,6 +68,7 @@ public class CategorieService implements IService<Categorie>{
 
      @Override
     public List<Categorie> recuperer() throws SQLException {
+        ArticleService artsr = new ArticleService ();
         List<Categorie> categories = new ArrayList<>();
         String req = "select * from Categorie";
         Statement st = cnx.createStatement();
@@ -63,8 +77,7 @@ public class CategorieService implements IService<Categorie>{
             Categorie p = new Categorie();
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
-            
-            
+            //p.setArticles(artsr.recupererByCategorie(p));
             categories.add(p);
         }
         return categories;
@@ -73,15 +86,15 @@ public class CategorieService implements IService<Categorie>{
     public List<Categorie>recupererById (Categorie t)throws SQLException{
         ArticleService artsr = new ArticleService ();
         List<Categorie> categories = new ArrayList<>();
-        String req = " select * from categorie where id = +t.getId()";
+        String req = " select * from categorie where id = "+t.getId();
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(req);
         while(rs.next()){
             Categorie p = new Categorie();
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
-            p.setArticles(artsr.recupererByCategorie(p));
-            
+            //p.setArticles(artsr.recupererByCategorie(p));
+
             categories.add(p);
         }
         return categories;

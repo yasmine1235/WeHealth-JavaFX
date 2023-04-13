@@ -27,16 +27,29 @@ public class Num_mediaService implements IService<Num_media> {
     }
 
     @Override
-    public void ajouter(Num_media t) throws SQLException {
-        String req = "insert into categorie(nom,nom_fichier) values('" + t.getNom() + "','" + t.getNom_fichier() + "')";
+    public Num_media ajouter(Num_media t) throws SQLException {
+        String req = "insert into Num_media(nom,nom_fichier) values('" + t.getNom() + "','" + t.getNom_fichier() + "')";
         Statement st = cnx.createStatement();
-        st.executeUpdate(req);
+        int affectedRows = st.executeUpdate(req,st.RETURN_GENERATED_KEYS);
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                t.setId(generatedKeys.getInt(1));
+            }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+        return t;
     }
 
 
     @Override
     public void modifier(Num_media t) throws SQLException {
-        String req = "update Num_media set nom = ? nomFichier = ? where id = ?";
+        String req = "update Num_media set nom = ? nom_fichier = ? where id = ?";
         PreparedStatement ps = cnx.prepareStatement(req);
         ps.setString(1, t.getNom());
         ps.setString(2, t.getNom_fichier());
@@ -64,22 +77,22 @@ public class Num_mediaService implements IService<Num_media> {
             Num_media p = new Num_media();
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
-            p.setNom(rs.getString("nomFichier"));
+            p.setNom(rs.getString("nom_fichier"));
           
            medias.add(p);
         }
         return medias;
     }
-     public List<Num_media> recupererById(Num_media t) throws SQLException {
+     public List<Num_media> recupererById(int t) throws SQLException {
         List<Num_media> medias = new ArrayList<>();
-        String req = " select * from num_media where id = +t.getId()";
+        String req = " select * from num_media where id = "+t;
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(req);
         while(rs.next()){
             Num_media p = new Num_media();
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
-            p.setNom(rs.getString("nomFichier"));
+            p.setNom_fichier(rs.getString("nom_fichier"));
           
            medias.add(p);
         }

@@ -31,10 +31,22 @@ public class ArticleService implements IService<Article> {
     }
 
     @Override
-    public void ajouter(Article t) throws SQLException {
-        String req = "insert into Article (Titre,featured_text,Contenu,created_at,updated_at,categorie,num_media) values('" + t.getTitre() + "','" + t.getContenu() + "','" + t.getFeatured_text() + "','" + t.getCreated_at() + "','" + t.getUpdated_at() + "','" + t.getCategorie().getId() + "','" + t.getNum_media().getId() + "')";
+    public Article ajouter(Article t) throws SQLException {
+        String req = "insert into Article (Titre,featured_text,Contenu,created_at,updated_at,categorie_id,featured_image_id) values('" + t.getTitre() + "','" + t.getContenu() + "','" + t.getFeatured_text() + "','" + t.getCreated_at() + "','" + t.getUpdated_at() + "','" + t.getCategorie().getId() + "','" + t.getNum_media().getId() + "')";
         Statement st = cnx.createStatement();
-        st.executeUpdate(req);
+        int affectedRows = st.executeUpdate(req, st.RETURN_GENERATED_KEYS);
+        if (affectedRows == 0) {
+            throw new SQLException("Creating article failed, no rows affected.");
+        }
+
+        try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                t.setId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+        return t;
     }
 
     @Override
@@ -80,8 +92,7 @@ public class ArticleService implements IService<Article> {
                             rs.getInt("categorie_id"))
             ).get(0));
             p.setNum_media(medsr.recupererById(
-                    new Num_media(
-                            rs.getInt("featured_image_id"))
+                    rs.getInt("featured_image_id")
             ).get(0));
             p.setLikes(this.recupererlikes(p.getId()));
             articles.add(p);
@@ -94,7 +105,7 @@ public class ArticleService implements IService<Article> {
         CategorieService catsr = new CategorieService();
         Num_mediaService medsr = new Num_mediaService();
         List<Article> articles = new ArrayList<>();
-        String req = "select * from Article where id = +t.getId()";
+        String req = "select * from Article where id = " + t.getId();
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(req);
         while (rs.next()) {
@@ -110,8 +121,7 @@ public class ArticleService implements IService<Article> {
                             rs.getInt("categorie_id"))
             ).get(0));
             p.setNum_media(medsr.recupererById(
-                    new Num_media(
-                            rs.getInt("featured_image_id"))
+                    rs.getInt("featured_image_id")
             ).get(0));
             p.setLikes(this.recupererlikes(p.getId()));
             articles.add(p);
@@ -123,7 +133,7 @@ public class ArticleService implements IService<Article> {
         CategorieService catsr = new CategorieService();
         Num_mediaService medsr = new Num_mediaService();
         List<Article> articles = new ArrayList<>();
-        String req = "SELECT * FROM Article where id.categorie = ? ";
+        String req = "SELECT * FROM Article where categorie_id = ? ";
         PreparedStatement st = cnx.prepareStatement(req);
         st.setInt(1, t.getId());
         ResultSet rs = st.executeQuery();
@@ -137,8 +147,7 @@ public class ArticleService implements IService<Article> {
             p.setUpdated_at(rs.getDate("updated_at"));
             p.setCategorie(t);
             p.setNum_media(medsr.recupererById(
-                    new Num_media(
-                            rs.getInt("featured_image_id"))
+                    rs.getInt("featured_image_id")
             ).get(0));
             p.setLikes(this.recupererlikes(p.getId()));
             articles.add(p);
@@ -149,14 +158,14 @@ public class ArticleService implements IService<Article> {
 
     public List<User> recupererlikes(int t) throws SQLException {
         List<User> users = new ArrayList<>();
-        UserService service =new UserService();
-        String req = "SELECT * FROM Article_like where id.article = ? ";
+        UserService service = new UserService();
+        String req = "SELECT * FROM Article_like where article_id = ? ";
         PreparedStatement st = cnx.prepareStatement(req);
         st.setInt(1, t);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
             int id = rs.getInt(t);
-            User user= service.recupererById(new User(id)).get(0);
+            User user = service.recupererById(new User(id)).get(0);
             users.add(user);
         }
         return users;

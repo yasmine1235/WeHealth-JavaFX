@@ -30,10 +30,23 @@ Connection cnx;
     }
 
     @Override
-    public void ajouter(Comment t) throws SQLException {
+    public Comment ajouter(Comment t) throws SQLException {
        String req = "insert into categorie(nom) values('" + t.getArticle().getId()+"','"+ t.getUser().getId()+"','"+ t.getContenu()+ "','"+ t.getCreated_at()+"')";
         Statement st = cnx.createStatement();
-        st.executeUpdate(req);
+        int affectedRows=st.executeUpdate(req,st.RETURN_GENERATED_KEYS);
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+
+        try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                t.setId(generatedKeys.getInt(1));
+            }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+        return t;
     }
     
 
@@ -82,7 +95,7 @@ Connection cnx;
         ArticleService artsr =new ArticleService();
         UserService usersr = new UserService();
         List<Comment> comments = new ArrayList<>();
-        String req = "select * from Comment where id = +t.getId()";
+        String req = "select * from Comment where id = "+t.getId();
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(req);
         while(rs.next()){

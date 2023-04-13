@@ -20,6 +20,11 @@ public class Num_media {
     public Num_media() {
     }
 
+    @Override
+    public String toString() {
+        return nom_fichier;
+    }
+
     public Num_media(int id, String nom, String nom_fichier, List<Article> articles) {
         this.id = id;
         this.nom = nom;
